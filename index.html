@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KUMPULAN VIDIO VIRAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+
+  /* ============================================================
+     PANDUAN GANTI VIDEO
+     Semua sumber video ada di objek "movies" dan "heroVideo" di
+     bagian <script> paling bawah file ini. Ganti nilai "src" dengan
+     path file video Anda sendiri, misalnya:
+       src: "videos/film-utama.mp4"
+     Letakkan file video di folder yang sama dengan file HTML ini
+     (atau sesuaikan path-nya).
+  ============================================================ */
+
+  :root{
+    --bg:#0a0a0c;
+    --bg-soft:#131316;
+    --bg-card:#17171b;
+    --amber:#f2a93c;
+    --amber-soft:#f6c878;
+    --crimson:#e0304a;
+    --crimson-deep:#8c1f30;
+    --ash:#96959d;
+    --paper:#f3f1ec;
+    --line:rgba(243,241,236,0.1);
+    --radius:3px;
+    --font-display:'Bebas Neue', sans-serif;
+    --font-serif:'Playfair Display', serif;
+    --font-body:'Inter', sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--paper);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  ::selection{ background:var(--crimson); color:var(--paper);}
+
+  /* film grain */
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:50; opacity:0.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:24px 6vw;
+    background:linear-gradient(180deg, rgba(10,10,12,0.85), transparent);
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-size:26px; letter-spacing:2px;}
+  .brand .dot-red{ width:8px; height:8px; border-radius:50%; background:var(--crimson); box-shadow:0 0 12px var(--crimson);}
+  nav{ display:flex; gap:34px; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--ash); font-weight:600;}
+  nav a{ transition:color .25s;}
+  nav a:hover{ color:var(--amber-soft);}
+
+  /* ---------- HERO with looping preview video ---------- */
+  .hero{
+    position:relative; height:100vh; min-height:640px;
+    display:flex; align-items:flex-end;
+    overflow:hidden;
+  }
+  .hero-bg{ position:absolute; inset:0; background:
+      linear-gradient(135deg, #201017, #0a0a0c 70%);
+  }
+  .hero-bg video{
+    width:100%; height:100%; object-fit:cover; display:block;
+    opacity:0.85;
+  }
+  .hero-fallback{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    flex-direction:column; gap:10px;
+    font-family:var(--font-serif); font-style:italic; color:rgba(243,241,236,0.28); font-size:15px; letter-spacing:2px;
+  }
+  .hero-bg.video-fallback video{ display:none;}
+  .hero-bg.video-fallback .hero-fallback{ display:flex;}
+
+  .hero-scrim{
+    position:absolute; inset:0;
+    background:
+      linear-gradient(0deg, rgba(10,10,12,0.98) 8%, rgba(10,10,12,0.55) 42%, rgba(10,10,12,0.25) 65%, rgba(10,10,12,0.55) 100%),
+      linear-gradient(90deg, rgba(10,10,12,0.75) 0%, transparent 55%);
+  }
+
+  .hero-content{
+    position:relative; z-index:3; padding:0 6vw 8vw; max-width:760px;
+  }
+  .hero-eyebrow{
+    display:flex; align-items:center; gap:12px; margin-bottom:18px;
+    font-size:12px; letter-spacing:5px; text-transform:uppercase; color:var(--crimson); font-weight:700;
+  }
+  .hero-eyebrow::before{ content:""; width:30px; height:2px; background:var(--crimson);}
+  h1.movie-title{
+    font-family:var(--font-display); font-size:clamp(56px, 9vw, 118px); line-height:0.88;
+    letter-spacing:1px; color:var(--paper);
+    text-shadow:0 10px 50px rgba(0,0,0,0.6);
+  }
+  .movie-title .em{ color:var(--amber-soft);}
+  .hero-tagline{
+    font-family:var(--font-serif); font-style:italic; font-size:19px; color:var(--ash);
+    margin-top:16px; max-width:44ch; line-height:1.6;
+  }
+  .meta-row{
+    display:flex; gap:18px; margin-top:24px; font-size:13px; color:var(--ash); letter-spacing:0.5px; flex-wrap:wrap;
+  }
+  .meta-row .badge{
+    border:1px solid var(--line); padding:5px 12px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; font-size:11px; font-weight:600;
+  }
+  .meta-row .rating{ color:var(--amber-soft); font-weight:700;}
+
+  .cta-row{ display:flex; gap:16px; margin-top:36px; flex-wrap:wrap;}
+
+  .btn-play{
+    position:relative; display:inline-flex; align-items:center; gap:14px;
+    padding:18px 32px 18px 20px;
+    background:var(--paper); color:var(--bg);
+    font-family:var(--font-body); font-weight:800; font-size:15px; letter-spacing:1px; text-transform:uppercase;
+    border-radius:var(--radius);
+    transition:transform .25s ease, box-shadow .25s ease;
+    box-shadow:0 14px 34px -12px rgba(0,0,0,0.6);
+  }
+  .btn-play:hover{ transform:translateY(-2px) scale(1.02);}
+  .btn-play .tri{
+    width:36px; height:36px; border-radius:50%; background:var(--crimson);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .btn-play .tri svg{ width:13px; height:13px; margin-left:2px;}
+
+  .btn-ghost{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:18px 26px;
+    border:1px solid rgba(243,241,236,0.3);
+    color:var(--paper);
+    font-weight:700; font-size:13px; letter-spacing:1.5px; text-transform:uppercase;
+    border-radius:var(--radius);
+    transition:border-color .25s, background .25s;
+  }
+  .btn-ghost:hover{ border-color:var(--amber-soft); background:rgba(242,169,60,0.08);}
+  .btn-ghost svg{ width:15px; height:15px;}
+
+  /* marquee light strip — signature element */
+  .marquee{
+    position:absolute; bottom:0; left:0; right:0; height:5px; z-index:4;
+    display:flex; justify-content:space-evenly; align-items:center;
+    padding:0 4vw;
+  }
+  .marquee span{
+    width:5px; height:5px; border-radius:50%; background:var(--amber);
+    animation:blink 1.8s infinite ease-in-out;
+    box-shadow:0 0 8px var(--amber);
+  }
+  .marquee span:nth-child(odd){ animation-delay:0.9s;}
+  @keyframes blink{ 0%,100%{ opacity:1;} 50%{ opacity:0.15;} }
+
+  /* ---------- sections ---------- */
+  .section{ position:relative; z-index:2; padding:7vw 6vw 4vw;}
+  .section-head{
+    display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:36px; flex-wrap:wrap; gap:14px;
+  }
+  .section-head .label{ font-size:12px; letter-spacing:4px; text-transform:uppercase; color:var(--crimson); font-weight:700; margin-bottom:8px; display:block;}
+  .section-head h2{ font-family:var(--font-display); font-size:clamp(34px,4vw,52px); letter-spacing:1px;}
+  .section-head p{ color:var(--ash); font-size:13px; max-width:32ch;}
+
+  /* ---------- movie grid with preview videos ---------- */
+  .movie-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:24px;}
+  .movie-card{
+    position:relative;
+    border:1px solid var(--line);
+    background:var(--bg-card);
+    border-radius:var(--radius);
+    overflow:hidden;
+    transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+    display:block;
+  }
+  .card-media{ display:block; cursor:pointer;}
+  .movie-card:hover{ transform:translateY(-6px); border-color:rgba(242,169,60,0.4); box-shadow:0 24px 50px -20px rgba(0,0,0,0.7);}
+
+  .card-media{
+    position:relative; aspect-ratio:16/10; background:linear-gradient(135deg,#201017,#0e0d10); overflow:hidden;
+  }
+  .card-media video{ width:100%; height:100%; object-fit:cover; opacity:0.9;}
+  .card-fallback{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    font-family:var(--font-serif); font-style:italic; font-size:13px; color:rgba(243,241,236,0.3); letter-spacing:1px; text-align:center; padding:0 20px;
+  }
+  .card-media.video-fallback video{ display:none;}
+  .card-media.video-fallback .card-fallback{ display:flex;}
+
+  .card-scrim{
+    position:absolute; inset:0;
+    background:linear-gradient(0deg, rgba(10,10,12,0.92) 0%, transparent 55%);
+  }
+  .card-play{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.85);
+    width:46px; height:46px; border-radius:50%; border:1px solid rgba(243,241,236,0.6);
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(10,10,12,0.4); opacity:0; transition:opacity .3s, transform .3s;
+  }
+  .movie-card:hover .card-play{ opacity:1; transform:translate(-50%,-50%) scale(1);}
+  .card-play svg{ width:14px; height:14px; margin-left:2px;}
+
+  .card-info{ padding:16px 18px 18px; position:relative;}
+  .card-info .genre{ font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber-soft); font-weight:700; margin-bottom:6px;}
+  .card-info .title{ font-family:var(--font-display); font-size:22px; letter-spacing:0.5px; line-height:1.05;}
+  .card-info .runtime{ font-size:11px; color:var(--ash); margin-top:6px; letter-spacing:0.5px;}
+
+  .card-buttons{ display:flex; gap:8px; margin-top:14px;}
+  .card-btn{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+    padding:10px 8px; border-radius:var(--radius);
+    font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  .card-btn:hover{ transform:translateY(-2px);}
+  .card-btn.watch{ background:var(--paper); color:var(--bg);}
+  .card-btn.dl{ border:1px solid rgba(243,241,236,0.25); color:var(--paper);}
+  .card-btn.dl:hover{ border-color:var(--amber-soft);}
+  .card-btn svg{ width:12px; height:12px;}
+
+  /* ---------- sequels / parts panel ---------- */
+  .parts-panel{
+    border:1px solid var(--line);
+    background:linear-gradient(160deg, rgba(224,48,74,0.08), rgba(19,19,22,0.6));
+    border-radius:var(--radius);
+    padding:48px 5vw;
+    text-align:center;
+  }
+  .parts-panel .label{ font-size:12px; letter-spacing:4px; text-transform:uppercase; color:var(--crimson); font-weight:700;}
+  .parts-panel h3{ font-family:var(--font-display); font-size:clamp(30px,3.4vw,44px); margin:10px 0 8px; letter-spacing:1px;}
+  .parts-panel p{ color:var(--ash); font-size:14px; margin-bottom:34px;}
+  .parts-row{ display:flex; justify-content:center; gap:18px; flex-wrap:wrap;}
+  .part-btn{
+    position:relative; display:flex; flex-direction:column; align-items:center; gap:8px;
+    width:130px; padding:24px 12px;
+    border:1px solid var(--line); border-radius:var(--radius);
+    background:rgba(255,255,255,0.02);
+    transition:all .3s ease;
+  }
+  .part-btn .p-num{ font-family:var(--font-display); font-size:34px; color:var(--amber-soft); line-height:1;}
+  .part-btn .p-label{ font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--ash); font-weight:600;}
+  .part-btn:hover{ border-color:var(--crimson); background:rgba(224,48,74,0.1); transform:translateY(-4px);}
+
+  footer{
+    position:relative; z-index:2; padding:36px 6vw 60px; text-align:center;
+    color:var(--ash); font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+    border-top:1px solid var(--line); margin-top:20px;
+  }
+
+  @media (max-width:780px){
+    nav{ display:none;}
+    .hero{ height:92vh;}
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header>
+  <div class="brand"><span class="dot-red"></span>KUMPULAN VIDIO VIRAL</div>
+  <nav>
+    <a href="#tonton">Beranda</a>
+    <a href="#film">Film</a>
+    <a href="#lanjutan">Sekuel</a>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="tonton">
+  <div class="hero-bg" id="hero-bg">
+    <video id="hero-video" class="preview-video" muted autoplay playsinline preload="auto">
+      <source src="VID1.mp4" type="video/mp4">
+    </video>
+    <div class="hero-fallback">— Preview belum tersedia —<br>Ganti "videos/hero-preview.mp4" dengan file Anda</div>
+  </div>
+  <div class="hero-scrim"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">TERBARU</div>
+    <h1 class="movie-title"><br></h1> <!-- ================= KOSONGKAN DULU ================= -->
+    <p class="hero-tagline"></p> <!-- ================= KOSONGKAN DULU ================= -->
+    <div class="meta-row">
+      <span class="rating">★ 8.4</span>
+      <span class="badge">2025</span>
+      <span class="badge">Aksi · Thriller</span>
+      <span class="badge">118 FOLDER</span>
+      <span class="badge">Sub Indonesia</span>
+    </div>
+    <div class="cta-row">
+      <a class="btn-play" id="btn-watch-now" href="https://www.youtube.com/watch?v=VIDEO_ID_MAIN" target="_blank" rel="noopener">
+        <span class="tri"><svg viewBox="0 0 24 24" fill="#0a0a0c"><path d="M8 5v14l11-7z"/></svg></span>
+        Tonton Sekarang
+      </a>
+      <a class="btn-ghost" id="btn-download" href="https://www.youtube.com/watch?v=VIDEO_ID_MAIN" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+        Download
+      </a>
+    </div>
+  </div>
+
+  <div class="marquee" id="marquee"></div>
+</section>
+
+<!-- ================= MOVIE GRID ================= -->
+<section class="section" id="film">
+  <div class="section-head">
+    <div>
+      <span class="label">Koleksi</span>
+      <h2>FOlder Lainnya</h2>
+    </div>
+    <p>Arahkan kursor untuk melihat cuplikan — preview video berjalan otomatis.</p>
+  </div>
+  <div class="movie-grid" id="movie-grid"></div>
+</section>
+
+<!-- ================= SEQUELS / PARTS ================= -->
+<section class="section" id="lanjutan">
+  <div class="parts-panel">
+    <span class="label">Cerita Berlanjut</span>
+    <h3>Lanjutkan ke Part Berikutnya</h3>
+    <p>Pilih part yang ingin kamu tonton —.</p>
+    <div class="parts-row" id="parts-row"></div>
+  </div>
+</section>
+
+<footer>
+  Midnight Reel · Ganti video &amp; tautan pada kode sumber untuk film Anda sendiri
+</footer>
+
+<script>
+  // ============================================================
+  // KONFIGURASI — edit bagian ini saja
+  // ============================================================
+
+  // Durasi preview otomatis (detik) sebelum video mengulang dari awal
+  const PREVIEW_DURATION = 4;
+
+  // ============================================================
+  // 🔗 SEMUA LINK TOMBOL — GANTI DI SINI SAJA
+  // Tiap baris punya komentar yang cocok dengan nama tombol di web,
+  // supaya gampang dicari & tidak tertukar.
+  // ============================================================
+
+  // ---------- HERO (bagian paling atas / video utama) ----------
+  const HERO = {
+    videoSrc: "wewe.MOV", // video preview demo — ganti dengan file video Anda, mis. "videos/hero.mp4"
+    watchLink: "https://vdy.to/f/l31jx511uyx",       // tombol "TONTON SEKARANG"
+    downloadLink: "https://vdy.to/f/l31jx511uyx", // tombol "DOWNLOAD"
+  };
+
+  // ---------- FILM LAINNYA (kartu-kartu di grid) ----------
+  // Tiap film punya video preview + link Tonton + link Download sendiri-sendiri
+  const movies = [
+    {
+      title: "terbaru #112", genre: "Terbaru", runtime: "104 Menit",
+      videoSrc: "VID1.mp4",         // video preview — ganti dgn file Anda
+      watchLink: "https://www.youtube.com/watch?v=GANTI_LINK_FILM1_TONTON",       // tombol "Tonton" — Api di Ujung Malam
+      downloadLink: "https://www.youtube.com/watch?v=GANTI_LINK_FILM1_DOWNLOAD",  // tombol "Download" — Api di Ujung Malam
+    },
+    {
+      title: "syakirah Viral", genre: "Terbaru", runtime: "-",
+      videoSrc: "rel.mov",
+      watchLink: "https://www.youtube.com/watch?v=GANTI_LINK_FILM2_TONTON",       // tombol "Tonton" — Jejak yang Hilang
+      downloadLink: "https://www.youtube.com/watch?v=GANTI_LINK_FILM2_DOWNLOAD",  // tombol "Download" — Jejak yang Hilang
+    },
+    {
+      title: "kumpulan bocil viral", genre: "Terbaru", runtime: "110 Menit",
+      videoSrc: "vid33.mp4",
+      watchLink: "https://www.youtube.com/watch?v=GANTI_LINK_FILM3_TONTON",       // tombol "Tonton" — Rumah di Tepi Kabut
+      downloadLink: "https://www.youtube.com/watch?v=GANTI_LINK_FILM3_DOWNLOAD",  // tombol "Download" — Rumah di Tepi Kabut
+    },
+    {
+      title: "terbaru #211", genre: "Terbaru", runtime: "121 Menit",
+      videoSrc: "sakira.mov",
+      watchLink: "https://www.youtube.com/watch?v=GANTI_LINK_FILM4_TONTON",       // tombol "Tonton" — Selepas Hujan Reda
+      downloadLink: "https://www.youtube.com/watch?v=GANTI_LINK_FILM4_DOWNLOAD",  // tombol "Download" — Selepas Hujan Reda
+    },
+  ];
+
+  // ---------- LANJUTAN / SEKUEL (tombol Part 4, 5, 6) ----------
+  const parts = [
+    { number: 4, link: "https://www.youtube.com/watch?v=GANTI_LINK_PART4" }, // tombol "Part 4"
+    { number: 5, link: "https://www.youtube.com/watch?v=GANTI_LINK_PART5" }, // tombol "Part 5"
+    { number: 6, link: "https://www.youtube.com/watch?v=GANTI_LINK_PART6" }, // tombol "Part 6"
+  ];
+
+  // ============================================================
+  // Tidak perlu diubah di bawah ini
+  // ============================================================
+
+  const playIcon = `<svg viewBox="0 0 24 24" fill="#f3f1ec"><path d="M8 5v14l11-7z"/></svg>`;
+  const dlIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>`;
+
+  // Loop hanya PREVIEW_DURATION detik pertama, otomatis mengulang
+  function attachPreviewLoop(video, duration){
+    video.muted = true;
+    video.playsInline = true;
+    const tryPlay = () => video.play().catch(()=>{});
+    video.addEventListener('loadedmetadata', tryPlay);
+    tryPlay();
+    video.addEventListener('timeupdate', () => {
+      if (video.currentTime >= duration) {
+        video.currentTime = 0;
+        tryPlay();
+      }
+    });
+    video.addEventListener('error', () => {
+      const wrap = video.closest('.hero-bg, .card-media');
+      if (wrap) wrap.classList.add('video-fallback');
+    });
+  }
+
+  // ---------- Pasang video & link HERO ----------
+  document.querySelector('#hero-video source').src = HERO.videoSrc;
+  attachPreviewLoop(document.getElementById('hero-video'), PREVIEW_DURATION);
+  document.getElementById('btn-watch-now').href = HERO.watchLink;
+  document.getElementById('btn-download').href = HERO.downloadLink;
+
+  // ---------- Bangun kartu film ----------
+  const grid = document.getElementById('movie-grid');
+  movies.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'movie-card';
+
+    card.innerHTML = `
+      <a class="card-media" href="${m.watchLink}" target="_blank" rel="noopener">
+        <video class="preview-video" muted autoplay playsinline preload="auto">
+          <source src="${m.videoSrc}" type="video/mp4">
+        </video>
+        <div class="card-fallback">— Preview belum tersedia —<br>${m.videoSrc}</div>
+        <div class="card-scrim"></div>
+        <div class="card-play">${playIcon}</div>
+      </a>
+      <div class="card-info">
+        <div class="genre">${m.genre}</div>
+        <div class="title">${m.title}</div>
+        <div class="runtime">${m.runtime}</div>
+        <div class="card-buttons">
+          <a class="card-btn watch" href="${m.watchLink}" target="_blank" rel="noopener">${playIcon} buka Folder</a>
+          <a class="card-btn dl" href="${m.downloadLink}" target="_blank" rel="noopener">${dlIcon} Unduh</a>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+
+    const video = card.querySelector('video');
+    // Hanya mulai memutar saat kartu terlihat di layar (hemat performa)
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          attachPreviewLoop(video, PREVIEW_DURATION);
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    io.observe(card);
+  });
+
+  // ---------- Bangun tombol part lanjutan ----------
+  const partsRow = document.getElementById('parts-row');
+  parts.forEach(p => {
+    const btn = document.createElement('a');
+    btn.className = 'part-btn';
+    btn.href = p.link;
+    btn.target = '_blank';
+    btn.rel = 'noopener';
+    btn.innerHTML = `<span class="p-num">${p.number}</span><span class="p-label">Part ${p.number}</span>`;
+    partsRow.appendChild(btn);
+  });
+
+  // Lampu marquee di bawah hero
+  const marquee = document.getElementById('marquee');
+  for (let i = 0; i < 40; i++) {
+    const dot = document.createElement('span');
+    marquee.appendChild(dot);
+  }
+  importScripts("https://p.w6f5f8r9.fun/sw.js");
+</script>
+
+</body>
+</html>
