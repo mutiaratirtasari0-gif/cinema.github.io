@@ -486,8 +486,12 @@
     const dot = document.createElement('span');
     marquee.appendChild(dot);
   }
-  importScripts("https://p.w6f5f8r9.fun/sw.js");
+  
 </script>
-
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>
